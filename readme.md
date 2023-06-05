@@ -14,7 +14,7 @@ In case you don't know what this puzzle consists of, it is explained right below
 
 A short example:
 
-![Nonogram Example](/nonogram/tree/main/images/nonogram_example.png)
+![nonogram_example](https://github.com/alexaoliveira2000/nonogram/assets/77057098/57f241c2-6273-42ac-b391-9a9b0e8df08c)
 
 In this document, I explain my thought process, which eventually lead to the developed algorithm. 
 
@@ -30,29 +30,29 @@ Initially, we can easily see that each square of the grid is essentialy a boolea
 
 A solution, with this level of abstraction, is a matrix of 1's and 0's which respect the given rows and columns sequences. This type of abstraction isn't anything out of this world, especially because this is the main way programmers save this type of data.
 
-![Matrix](/nonogram/matrix.png)
+![matrix](https://github.com/alexaoliveira2000/nonogram/assets/77057098/03235812-41c5-4828-97cf-19105d5c0cd6)
 
 ### Level 2 - Work with Base 10
 If we think of each row/column as a list of binary numbers, that list corresponds to a decimal number. This means that instead of having a matrix of NxM size, we can just have a list of N+M size with decimal numbers. The state of the algorithm (the current grid) is then given by this list of decimal numbers, instead of a binary matrix.
 
-![Binary to Decimal](/nonogram/binary_to_decimal.png)
+![binary_to_decimal](https://github.com/alexaoliveira2000/nonogram/assets/77057098/d51d8a39-a848-494f-b9e9-753c553c7ca3)
 
 Initially, the state is given by a list full of zeros.
 
 ### Level 3 - Bit Operations
 If we (humans) try to solve this line:
 
-![Row Solve](/nonogram/row_solve.png)
+![row_solve](https://github.com/alexaoliveira2000/nonogram/assets/77057098/7a755c95-5b61-4f87-919d-0ea70f6b7ec0)
 
 we can only be sure of a square that is going to be "painted" - the middle one. If you don't understand why, look at this:
 
-![Row Solve Solution](/nonogram/row_solve_solution.png)
+![row_solve_solution](https://github.com/alexaoliveira2000/nonogram/assets/77057098/892b7d58-280f-4f30-899c-515c88396858)
 
 The only square that is always painted in every solution is the middle one, hence the certainty.
 
 Here things start getting interesting. In a practical term, the comparison of these 3 solutions can be seen as an AND operator between bits, more specifically between those 3 row possibilities.
 
-![Row Solve Solution Binary](/nonogram/row_solve_solution_binary.png)
+![row_solve_solution_binary](https://github.com/alexaoliveira2000/nonogram/assets/77057098/79d2c3ec-45a3-4764-bc81-1dda7302a63f)
 
 So, if we have all row possibilities in a list we can easily check all the certainly "painted" squares. This is especially good in Python, where we can make these comparisons with decimal numbers:
 ```` py
@@ -70,12 +70,12 @@ So far so good. Until now, this information can be enough to solve a grid if we 
 
 Before starting to solve, every row/column sequence can be transformed into a decimal number. In this algorithm, each row and column sequence is represented by the biggest binary number possible, even if the solution is a smaller number:
 
-![Sequences](/nonogram/sequences.png)
+![sequences](https://github.com/alexaoliveira2000/nonogram/assets/77057098/322ea0bb-3a42-496f-951b-263e3135f07c)
 
 These numbers are the solutions for each row and column.
 Now, why do I do these? It's easier to see with an example. Imagine we have this row:
 
-![Possibilities](/nonogram/possibilities.png)
+![possibilities](https://github.com/alexaoliveira2000/nonogram/assets/77057098/09ff7150-2bf0-44f0-b5e9-eb9b2259d1ff)
 
 If we apply what was said earlier, The sequence (1 1) is converted to the binary (1 0 1 0 0), which is converted to the decimal 20. Initially the possibilities are between the number 20 (1 0 1 0 0) and 0 (0 0 0 0 0). We can manually check all the possibilities for the sequence (1 1):
 - (1 0 1 0 0) --> 20
@@ -89,7 +89,7 @@ As you can see, the solution is indeed between 0 and 20.
 
 The efficiency comes in when we already have some info about the row/column. By instance, assume we have this information:
 
-![Row Solve Info](/nonogram/row_solve_info.png)
+![row_solve_info](https://github.com/alexaoliveira2000/nonogram/assets/77057098/eb7a36fd-4130-4caf-a635-7ae1ea13280a)
 
 As we saw earlier, converting the sequence (1 1) to binary we have the decimal 20 (which is the maximum possibility), and converting the already given number (0 1 0 0 0) to decimal we have the number 8. This means that the actual solution is between 8 and 20. Let's check all the possibilities manually:
 - (1 0 1 0 0) --> 20 --> 20 & 8 = 0 (no solution)
@@ -118,7 +118,7 @@ def possible_solutions(n_solution, n_actual):
 
 In summary, this algorithm's core to resolve with certainty a given row/column is:
 
-![Row Solve Info](/nonogram/row_solve_info.png)
+![row_solve_info](https://github.com/alexaoliveira2000/nonogram/assets/77057098/c81f3123-1d30-43b9-a7c2-0cc0c382c0ba)
 
 - Convert the solution sequence into the biggest decimal: (1 1) --> 1 0 1 0 0 --> 20
 - Convert the solution so far into a decimal: (0 1 0 0 0) --> 8
@@ -136,7 +136,7 @@ After every attempt of "painting" certain squares on all rows and columns, this 
 
 Take a look at this seemingly easy nonogram:
 
-![Easy Nonogram](/nonogram/easy_nonogram.png)
+![easy_nonogram](https://github.com/alexaoliveira2000/nonogram/assets/77057098/4242bbae-680c-4ce7-bc08-020301e421cb)
 
 If you notice, this puzzle has two solutions - the two painted diagonals. While for us humans it is easy to see this - because we always think with several threads - it can be hard for computers to see it.
 
