@@ -104,8 +104,9 @@ Given this, for every given two positive decimal numbers (for instance, 20 and 8
 ```` py
 # possible_solutions(20, 0) > [5, 9, 10, 17, 18, 20]
 # possible_solutions(20, 8) > [9, 10]
-# possible_solutions(20, 9) > [9, 10]
-def possible_solutions(n_solution, n_actual):
+# possible_solutions(20, 9) > [9]
+# possible_solutions(16, 8) > []
+
     solutions = []
     n_min = n_actual if n_actual != 0 else int(bin(n_solution)[2:].rstrip('0'), 2)
     solution_seq = sequence(list(bin(n_solution)[2:]))
