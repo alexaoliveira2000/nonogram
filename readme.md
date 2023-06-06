@@ -28,12 +28,12 @@ The focus of this algorithm isn't to beat other algorithms solving times (althou
 ### Level 1 - Grid Squares as Values
 Initially, we can easily see that each square of the grid is essentialy a boolean value (especially if we're into programming). In this algorithm, I arbitrarily assign 1 as "painted" square, and 0 as an "unpainted" square. Some algorithms go even deeper, giving a third value in case we are sure that that square will not be painted in the future (typically represented with a cross by players).
 
-A solution, with this level of abstraction, is a matrix of 1's and 0's which respect the given rows and columns sequences. This type of abstraction isn't anything out of this world, especially because this is the main way programmers save this type of data.
+A solution, with this level of abstraction, is a matrix of 1's and 0's which respect the clues sequences. This type of abstraction isn't anything out of this world, especially because this is the main way programmers save this type of data.
 
 ![matrix](https://github.com/alexaoliveira2000/nonogram/assets/77057098/03235812-41c5-4828-97cf-19105d5c0cd6)
 
 ### Level 2 - Work with Base 10
-If we think of each row/column as a list of binary numbers, that list corresponds to a decimal number. This means that instead of having a matrix of NxM size, we can just have a list of N+M size with decimal numbers. The state of the algorithm (the current grid) is then given by this list of decimal numbers, instead of a binary matrix.
+If we think of each row/column as a list of binary numbers, that list corresponds to a decimal number. This means that instead of having a matrix of NxM size, we can just have a list of N+M size with decimal numbers. The state of the algorithm (the current grid) is therefore given by this list of decimal numbers, instead of a binary matrix.
 
 ![binary_to_decimal](https://github.com/alexaoliveira2000/nonogram/assets/77057098/d51d8a39-a848-494f-b9e9-753c553c7ca3)
 
@@ -68,7 +68,7 @@ certain_value = reduce(operator.and_,row_values)
 ### Level 4 - Possible Solutions
 So far so good. Until now, this information can be enough to solve a grid if we are sure of every square we "paint", but what if we can't be sure without looking further ahead? This is where the solution possibilites come in.
 
-Before starting to solve, every row/column sequence can be transformed into a decimal number. In this algorithm, each row and column sequence is represented by the biggest binary number possible, even if the solution is a smaller number:
+Before starting to solve, every clues sequence can be transformed into a decimal number. In this algorithm, each row and column sequence is represented by the biggest binary number possible from these clues, even if the solution is a smaller number:
 
 ![sequences](https://github.com/alexaoliveira2000/nonogram/assets/77057098/322ea0bb-3a42-496f-951b-263e3135f07c)
 
@@ -77,7 +77,7 @@ Now, why do I do these? It's easier to see with an example. Imagine we have this
 
 ![possibilities](https://github.com/alexaoliveira2000/nonogram/assets/77057098/09ff7150-2bf0-44f0-b5e9-eb9b2259d1ff)
 
-If we apply what was said earlier, The sequence (1 1) is converted to the binary (1 0 1 0 0), which is converted to the decimal 20. Initially the possibilities are between the number 20 (1 0 1 0 0) and 0 (0 0 0 0 0). We can manually check all the possibilities for the sequence (1 1):
+If we apply what was said earlier, The clue (1 1) is converted to the binary (1 0 1 0 0), which is converted to the decimal 20. Initially the possibilities are between the number 20 (1 0 1 0 0) and 0 (0 0 0 0 0). We can manually check all the possibilities for the sequence (1 1):
 - (1 0 1 0 0) --> 20
 - (1 0 0 1 0) --> 18
 - (1 0 0 0 1) --> 17
@@ -91,13 +91,13 @@ The efficiency comes in when we already have some info about the row/column. By 
 
 ![row_solve_info](https://github.com/alexaoliveira2000/nonogram/assets/77057098/eb7a36fd-4130-4caf-a635-7ae1ea13280a)
 
-As we saw earlier, converting the sequence (1 1) to binary we have the decimal 20 (which is the maximum possibility), and converting the already given number (0 1 0 0 0) to decimal we have the number 8. This means that the actual solution is between 8 and 20. Let's check all the possibilities manually:
+As we saw earlier, converting the clue (1 1) to binary gives us the decimal 20 (which is the maximum possibility), and converting the solution so far (0 1 0 0 0) to decimal gives us the number 8. This means that the actual solution is between 8 and 20. Let's check all the possibilities manually:
 - (1 0 1 0 0) --> 20 --> 20 & 8 = 0 (no solution)
 - (1 0 0 1 0) --> 18 --> 18 & 8 = 0 (no solution)
 - (1 0 0 0 1) --> 17 --> 17 & 8 = 0 (no solution)
 - (0 1 0 1 0) --> 10 --> 10 & 8 = 10 (solution) --> (0 1 0 1 0)
 
-As you can see, 5 (0 0 1 0 1) is no longer a solution. We just need to check all possibilities between the given number so far (minimum) and the sequence number (maximum). In the example above, 10 is the only possible solution (0 1 0 1 0).
+As you can see, 5 (0 0 1 0 1) is no longer a solution. We just need to check all possibilities between the solution so far (minimum) and the clue number (maximum). In the example above, 10 is the only possible solution (0 1 0 1 0).
 
 Given this, for every given two positive decimal numbers (for instance, 20 and 8), we can write a function that returns us a list of all possible solutions between them (it works with binary in background!):
 
@@ -121,7 +121,7 @@ In summary, this algorithm's core to resolve with certainty a given row/column i
 
 ![row_solve_info](https://github.com/alexaoliveira2000/nonogram/assets/77057098/c81f3123-1d30-43b9-a7c2-0cc0c382c0ba)
 
-- Convert the solution sequence into the biggest decimal: (1 1) --> 1 0 1 0 0 --> 20
+- Convert the clues sequence into the biggest decimal: (1 1) --> 1 0 1 0 0 --> 20
 - Convert the solution so far into a decimal: (0 1 0 0 0) --> 8
 - Get all possible solutions between these numbers: possible_solutions(20, 8) --> [9, 10]
   - 9 --> (0 1 0 0 1)
