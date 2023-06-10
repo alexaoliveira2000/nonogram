@@ -1,4 +1,4 @@
-# Nonogram Solver Algorithm - The Power of Analysis
+# Nonogram Solver Algorithm - Abstract Analysis
 
 ## Introduction
 In this short document I talk about an algorithm developed by me to solve nonogram puzzles, and the power of analyzing these types of problems in order to come up with simple and elegant solutions. The algorithm is open-source, so feel free to reverse engineer it, upgraded it and/or reuse it.
@@ -139,13 +139,11 @@ Take a look at this seemingly easy nonogram:
 
 ![easy_nonogram](https://github.com/alexaoliveira2000/nonogram/assets/77057098/4242bbae-680c-4ce7-bc08-020301e421cb)
 
-If you notice, this puzzle has two solutions - the two painted diagonals. While for us humans it is easy to see this - because we always think with several threads - it can be hard for computers to see it.
+If you notice, this puzzle has two solutions at sight - the two painted diagonals (although there are more). While for us humans it is easy to see this - because we always think with several threads - it can be hard for computers to see it.
 
-According to my algorithm, it starts by filling all squares that it is sure of being part of the solution. The problem is that there are none. So? It starts looking at every possible solution for the first row, which are the numbers [16, 8, 4, 2, 1]. For each of these possible solutions, the algorithm assumes that this is the right solution, and tries to fill the remaining grid. Eventually, in some search branch, it arrives at a correct solution, while others start making no sense, and giving up on those (returning False).
+According to my algorithm, it starts by filling all squares that it is sure of being part of the solution. The problem is that there are none. So? It starts looking at every possible solution for the first row, which are the numbers [16, 8, 4, 2, 1]. For each of these possible solutions, the algorithm assumes that this is the right solution, and tries to fill the remaining grid. Eventually, in some search branch, it arrives at a correct solution, while others start making no sense, and giving up on those (returning False). If a nonogram has multiple solutions, the algorithm returns the first one found.
 
 # In Summary
 This algorithm is extremely simple, with the main focus being to abstract ourselves from the grid view and work with simpler data. It solves any given square grid generically, although it can take exponentially more time for puzzles bigger than 15x15. It thinks like a human, firstly solving what we are sure of, and only then what we are unsure.
 
 This is to show the power of analysing a problem and how we can turn a seemingly hard puzzle into something simple using some math and logic, and by ignoring irrelevant "front end" information (such as the grid itself and the solution sequences). Every puzzle has, inherently, vital and simple math behind it. The hard part is to find it.
-
-Alexandre Oliveira
